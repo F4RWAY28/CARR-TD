@@ -7,6 +7,15 @@ public class cameraMovement : MonoBehaviour
     public float fastSpeed = 20f;         // When holding Shift
     public float lookSensitivity = 2f;    // Mouse look sensitivity
 
+    [Header("Camera Boundaries")]
+    public bool useBoundaries = true;     // Toggle bounds on/off
+    public float minX = -50f;
+    public float maxX = 50f;
+    public float minY = 2f;
+    public float maxY = 20f;
+    public float minZ = -50f;
+    public float maxZ = 50f;
+
     private float rotationX = 0f;
     private float rotationY = 0f;
     private bool isLooking = false;
@@ -23,6 +32,7 @@ public class cameraMovement : MonoBehaviour
     {
         HandleLook();
         HandleMovement();
+        ClampPosition();
     }
 
     void HandleLook()
@@ -68,5 +78,16 @@ public class cameraMovement : MonoBehaviour
         if (Input.GetKey(KeyCode.Q)) move -= transform.up;   // Down
 
         transform.position += move.normalized * speed * Time.deltaTime;
+    }
+
+    void ClampPosition()
+    {
+        if (!useBoundaries) return;
+
+        Vector3 pos = transform.position;
+        pos.x = Mathf.Clamp(pos.x, minX, maxX);
+        pos.y = Mathf.Clamp(pos.y, minY, maxY);
+        pos.z = Mathf.Clamp(pos.z, minZ, maxZ);
+        transform.position = pos;
     }
 }

@@ -414,8 +414,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   waypoints:
   - {fileID: 0}
-  moveSpeed: 20
-  turnSpeed: 40
+  moveSpeed: 15
+  turnSpeed: 30
   lives: 1
   moneyReward: 215
   moneyLoss: 5000
