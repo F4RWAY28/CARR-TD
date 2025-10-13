@@ -467,13 +467,13 @@ MonoBehaviour:
   spawnPoint: {fileID: 676878512}
   pathParent: {fileID: 1799467732}
   timeBetweenEnemies: 2
-  timeBetweenWaves: 1
+  timeBetweenWaves: 3
   waves:
   - waveNumber: 1
     enemiesInWave: 10
     enemies:
     - enemyPrefab: {fileID: 7242646670505412009, guid: 8930d58a7e081894eac774c8275939df, type: 3}
-      lives: 2
+      lives: 1
       moneyReward: 25
       moneyLoss: 500
   - waveNumber: 2
@@ -484,7 +484,7 @@ MonoBehaviour:
       moneyReward: 35
       moneyLoss: 780
     - enemyPrefab: {fileID: 7242646670505412009, guid: 8930d58a7e081894eac774c8275939df, type: 3}
-      lives: 2
+      lives: 1
       moneyReward: 25
       moneyLoss: 500
   - waveNumber: 3
@@ -495,7 +495,7 @@ MonoBehaviour:
       moneyReward: 35
       moneyLoss: 780
     - enemyPrefab: {fileID: 7242646670505412009, guid: 8930d58a7e081894eac774c8275939df, type: 3}
-      lives: 2
+      lives: 1
       moneyReward: 25
       moneyLoss: 500
   - waveNumber: 4
@@ -510,7 +510,7 @@ MonoBehaviour:
       moneyReward: 65
       moneyLoss: 1200
     - enemyPrefab: {fileID: 7242646670505412009, guid: 8930d58a7e081894eac774c8275939df, type: 3}
-      lives: 2
+      lives: 1
       moneyReward: 25
       moneyLoss: 500
   - waveNumber: 5
@@ -525,14 +525,14 @@ MonoBehaviour:
       moneyReward: 65
       moneyLoss: 1200
     - enemyPrefab: {fileID: 7242646670505412009, guid: 8930d58a7e081894eac774c8275939df, type: 3}
-      lives: 2
+      lives: 1
       moneyReward: 25
       moneyLoss: 500
   - waveNumber: 6
     enemiesInWave: 16
     enemies:
     - enemyPrefab: {fileID: 7242646670505412009, guid: 8930d58a7e081894eac774c8275939df, type: 3}
-      lives: 2
+      lives: 1
       moneyReward: 25
       moneyLoss: 500
     - enemyPrefab: {fileID: 8169669132442805993, guid: 26edaaea7405aae459ac506f3324a5cf, type: 3}

@@ -245,6 +245,7 @@ MonoBehaviour:
   moveSpeed: 4
   turnSpeed: 8
   lives: 30
+  maxLives: 100
   moneyReward: 1000
   moneyLoss: 13000
   deathKnockbackForce: 5
@@ -252,7 +253,12 @@ MonoBehaviour:
   deathSounds:
   - {fileID: 8300000, guid: 4560c22f122545c498b16a99ad05f3a3, type: 3}
   - {fileID: 8300000, guid: ca096c381df27754aa2b50b9ee892ff1, type: 3}
-  waypointIndex: 0
+  healthBarPrefab: {fileID: 2086592484178215970, guid: cba2b5bd50d9fc14ca87d08771dfbf68, type: 3}
+  healthBarOffset: {x: 0, y: 2, z: 0}
+  healthColor: {r: 0, g: 1, b: 0.8364992, a: 1}
+  damageColor: {r: 1, g: 0, b: 0, a: 1}
+  damageLerpSpeed: 8
+  fadeDuration: 2
 --- !u!114 &4409611555367964563
 MonoBehaviour:
   m_ObjectHideFlags: 0

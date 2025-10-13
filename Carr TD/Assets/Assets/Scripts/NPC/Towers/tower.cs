@@ -18,14 +18,12 @@ public class tower : MonoBehaviour
     {
         fireCountdown -= Time.deltaTime;
 
-        // Get a valid target
         GameObject target = GetFirstAliveEnemy();
 
         if (target != null)
         {
             float distance = Vector3.Distance(transform.position, target.transform.position);
 
-            // Only aim and shoot if within range
             if (distance <= range)
             {
                 currentTarget = target;
@@ -39,7 +37,7 @@ public class tower : MonoBehaviour
             }
             else
             {
-                currentTarget = null; // too far, stop tracking
+                currentTarget = null;
             }
         }
         else
@@ -56,25 +54,19 @@ public class tower : MonoBehaviour
 
         foreach (GameObject e in enemies)
         {
-            if (e == null) continue;
-            if (!e.activeInHierarchy) continue;
+            if (e == null || !e.activeInHierarchy) continue;
 
             enemyPathing path = e.GetComponent<enemyPathing>();
-            if (path == null || path.waypoints == null || path.waypoints.Length == 0)
-                continue;
+            if (path == null || path.waypoints == null || path.waypoints.Length == 0) continue;
 
-            // Skip if out of range
-            if (Vector3.Distance(transform.position, e.transform.position) > range)
-                continue;
+            if (Vector3.Distance(transform.position, e.transform.position) > range) continue;
 
-            // Skip if dead (lives <= 0)
-            if (path.lives <= 0)
-                continue;
+            if (path.lives <= 0) continue; // <- now uses lives
 
-            if (path.waypointIndex > maxWaypointIndex)
+            if (path.WaypointIndex > maxWaypointIndex)
             {
                 first = e;
-                maxWaypointIndex = path.waypointIndex;
+                maxWaypointIndex = path.WaypointIndex;
             }
         }
 
@@ -95,9 +87,7 @@ public class tower : MonoBehaviour
     {
         if (vanPrefab == null || firePoint == null || target == null) return;
 
-        // Double-check target is still within range before firing
-        if (Vector3.Distance(transform.position, target.transform.position) > range)
-            return;
+        if (Vector3.Distance(transform.position, target.transform.position) > range) return;
 
         GameObject vanGO = Instantiate(vanPrefab, firePoint.position, firePoint.rotation);
         vanProjectile van = vanGO.GetComponent<vanProjectile>();
