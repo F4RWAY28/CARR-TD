@@ -2565,13 +2565,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cam: {fileID: 330585545}
   towerPrefab: {fileID: 7939718827147688650, guid: 892f183e72fdb2d4c807bd7bb07bbad7, type: 3}
-  previewPrefab: {fileID: 5572664481530935525, guid: 1c14b675af72b0e4c88e5cf778d359b0, type: 3}
+  previewPrefab: {fileID: 7939718827147688650, guid: ac81a362049acc641a0d090e2e8b972b, type: 3}
   towerCost: 1150
-  heightOffset: 1.2
+  heightOffset: -0.002
   groundMask:
     serializedVersion: 2
     m_Bits: 64
-  towerRange: 10
+  towerRange: 9
   rangeSegments: 50
   previewScale: {x: 1, y: 1, z: 1}
   checkRadius: 0.5

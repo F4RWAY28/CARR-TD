@@ -43,14 +43,10 @@ public class towerPlacement : MonoBehaviour
         isPlacing = true;
 
         previewInstance = Instantiate(previewPrefab);
-
-        // Set the preview scale using the Vector3
         previewInstance.transform.localScale = previewScale;
 
         previewRenderers = previewInstance.GetComponentsInChildren<Renderer>();
-
         SetPreviewTransparency(0.5f);
-        AddOutline(previewInstance, Color.white, 0.05f);
 
         // Setup range visualization
         rangeRenderer = previewInstance.GetComponent<LineRenderer>();
@@ -76,7 +72,6 @@ public class towerPlacement : MonoBehaviour
         previewInstance.transform.position = hit.point + Vector3.up * heightOffset;
         canPlace = false;
 
-        // Check placement validity
         int hits = Physics.OverlapSphereNonAlloc(previewInstance.transform.position, checkRadius, overlapResults);
         bool collidingWithPath = false;
         bool onGround = hit.collider.CompareTag("Ground");
@@ -182,22 +177,6 @@ public class towerPlacement : MonoBehaviour
         isPlacing = false;
         canPlace = false;
         rangeRenderer = null;
-    }
-
-    private void AddOutline(GameObject obj, Color outlineColor, float thickness)
-    {
-        foreach (Renderer rend in obj.GetComponentsInChildren<Renderer>())
-        {
-            GameObject outlineObj = Instantiate(rend.gameObject, rend.transform.position, rend.transform.rotation, rend.transform);
-            outlineObj.transform.localScale *= (1f + thickness);
-            Renderer outlineRend = outlineObj.GetComponent<Renderer>();
-
-            Material outlineMat = new Material(rend.sharedMaterial);
-            outlineMat.color = outlineColor;
-            outlineRend.material = outlineMat;
-
-            outlineRend.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-        }
     }
 
     private void DrawRangeCircle(Vector3 center, float radius)
