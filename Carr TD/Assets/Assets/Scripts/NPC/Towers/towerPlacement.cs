@@ -15,14 +15,15 @@ public class towerPlacement : MonoBehaviour
     [Tooltip("Scale of the transparent preview (X, Y, Z)")]
     public Vector3 previewScale = Vector3.one;
 
+    [Header("Collision & Detection Settings")]
+    public float pathDetectionRadius = 1.5f; // Prevent placement near paths
+
     private GameObject previewInstance;
     private LineRenderer rangeRenderer;
     private bool isPlacing = false;
     private bool canPlace = false;
     private Renderer[] previewRenderers;
-
-    private Collider[] overlapResults = new Collider[10];
-    public float checkRadius = 0.5f;
+    private Collider[] overlapResults = new Collider[20];
 
     void Update()
     {
@@ -72,10 +73,12 @@ public class towerPlacement : MonoBehaviour
         previewInstance.transform.position = hit.point + Vector3.up * heightOffset;
         canPlace = false;
 
-        int hits = Physics.OverlapSphereNonAlloc(previewInstance.transform.position, checkRadius, overlapResults);
-        bool collidingWithPath = false;
         bool onGround = hit.collider.CompareTag("Ground");
+        bool collidingWithPath = false;
+        bool collidingWithTower = false;
 
+        // Check for nearby paths
+        int hits = Physics.OverlapSphereNonAlloc(previewInstance.transform.position, pathDetectionRadius, overlapResults);
         for (int i = 0; i < hits; i++)
         {
             if (overlapResults[i].CompareTag("Enemy path"))
@@ -85,7 +88,27 @@ public class towerPlacement : MonoBehaviour
             }
         }
 
-        if (onGround && !collidingWithPath)
+        // Check collision with towers using collider overlap
+        Collider previewCollider = previewInstance.GetComponent<Collider>();
+        if (previewCollider != null)
+        {
+            Collider[] hitsTower = Physics.OverlapBox(
+                previewCollider.bounds.center,
+                previewCollider.bounds.extents,
+                previewInstance.transform.rotation
+            );
+
+            foreach (Collider col in hitsTower)
+            {
+                if (col.CompareTag("Tower"))
+                {
+                    collidingWithTower = true;
+                    break;
+                }
+            }
+        }
+
+        if (onGround && !collidingWithPath && !collidingWithTower)
         {
             canPlace = true;
             SetPreviewColor(Color.green);
@@ -142,6 +165,7 @@ public class towerPlacement : MonoBehaviour
         if (gameManager.Instance.money < towerCost || !canPlace) return;
 
         GameObject tower = Instantiate(towerPrefab, previewInstance.transform.position, Quaternion.identity);
+        tower.tag = "Tower"; // ensure tag is set on placement
         gameManager.Instance.LoseMoney(towerCost);
 
         StartCoroutine(FlashPlacedTower(tower));

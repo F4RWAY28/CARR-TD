@@ -11,6 +11,7 @@ TagManager:
   - Van2
   - Van3
   - Ground
+  - Tower
   layers:
   - Default
   - TransparentFX

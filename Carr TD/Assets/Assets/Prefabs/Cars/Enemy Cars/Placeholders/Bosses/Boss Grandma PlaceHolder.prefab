@@ -242,8 +242,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   waypoints:
   - {fileID: 0}
-  moveSpeed: 4
-  turnSpeed: 8
+  moveSpeed: 2
+  turnSpeed: 4
   lives: 30
   maxLives: 100
   moneyReward: 1000

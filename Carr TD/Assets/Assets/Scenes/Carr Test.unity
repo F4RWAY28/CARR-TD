@@ -148,6 +148,8 @@ MonoBehaviour:
   rangeSegments: 50
   previewScale: {x: 1, y: 1, z: 1}
   checkRadius: 1
+  pathDetectionRadius: 1.5
+  towerDetectionRadius: 1
 --- !u!114 &65793372 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2572826479732045996, guid: 289c2deec29117a4d8d8d10ec90b562f, type: 3}
@@ -2567,14 +2569,16 @@ MonoBehaviour:
   towerPrefab: {fileID: 7939718827147688650, guid: 892f183e72fdb2d4c807bd7bb07bbad7, type: 3}
   previewPrefab: {fileID: 7939718827147688650, guid: ac81a362049acc641a0d090e2e8b972b, type: 3}
   towerCost: 1150
-  heightOffset: -0.002
+  heightOffset: -0.02
   groundMask:
     serializedVersion: 2
     m_Bits: 64
   towerRange: 9
   rangeSegments: 50
-  previewScale: {x: 1, y: 1, z: 1}
-  checkRadius: 0.5
+  previewScale: {x: 2, y: 1, z: 2}
+  checkRadius: 3
+  pathDetectionRadius: 4
+  towerDetectionRadius: 4
 --- !u!4 &1132383358
 Transform:
   m_ObjectHideFlags: 0

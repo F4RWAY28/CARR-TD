@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class EnemyExplosion : MonoBehaviour
+public class enemyExplosion : MonoBehaviour
 {
     [Header("Explosion Settings")]
     public GameObject explosionPrefab; // Drag your explosion prefab here
@@ -57,6 +57,9 @@ public class EnemyExplosion : MonoBehaviour
         {
             GameObject explosion = Instantiate(explosionPrefab, transform.position, Quaternion.identity);
             explosion.transform.localScale = Vector3.one * explosionScale;
+
+            // Always destroy the explosion after 2 seconds
+            Destroy(explosion, 2f);
         }
         else
         {
