@@ -12,7 +12,7 @@ public class enemyPathing : MonoBehaviour
     public float turnSpeed = 5f;
 
     [Header("Stats")]
-    public int lives = 100; // Changed from currentLives
+    public int lives = 100;
     public int maxLives = 100;
     public int moneyReward = 1;
     public int moneyLoss = 1;
@@ -101,13 +101,13 @@ public class enemyPathing : MonoBehaviour
         if (waypoints.Length == 0) return;
 
         Transform target = waypoints[waypointIndex];
-        Vector3 dir = (target.position - transform.position).normalized;
-        dir.y = 0;
+        Vector3 direction = (target.position - transform.position).normalized;
 
-        if (dir.sqrMagnitude > 0.001f)
+        // ✅ Allow rotation to follow full 3D direction (including up/down tilt)
+        if (direction.sqrMagnitude > 0.001f)
         {
-            Quaternion lookRotation = Quaternion.LookRotation(dir);
-            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, turnSpeed * Time.deltaTime);
+            Quaternion targetRotation = Quaternion.LookRotation(direction, Vector3.up);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, turnSpeed * Time.deltaTime);
         }
 
         transform.position = Vector3.MoveTowards(transform.position, target.position, moveSpeed * Time.deltaTime);

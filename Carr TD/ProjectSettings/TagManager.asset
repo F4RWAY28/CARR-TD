@@ -12,6 +12,7 @@ TagManager:
   - Van3
   - Ground
   - Tower
+  - Destructible
   layers:
   - Default
   - TransparentFX
