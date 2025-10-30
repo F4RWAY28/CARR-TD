@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2108221490110622769}
   - component: {fileID: 4000928847912509673}
   - component: {fileID: 5612013562038423536}
+  - component: {fileID: 8915180597515394118}
   m_Layer: 0
   m_Name: Wheel_C001
   m_TagString: Untagged
@@ -86,6 +87,28 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &8915180597515394118
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3338029426844802960}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -1056423630275198949, guid: 74e4023ca8196a942a51f4ef03454806, type: 3}
 --- !u!1 &4250005425796993061
 GameObject:
   m_ObjectHideFlags: 0
@@ -104,6 +127,7 @@ GameObject:
   - component: {fileID: 182495413900206117}
   - component: {fileID: 4933479662686880101}
   - component: {fileID: -3899471282162044310}
+  - component: {fileID: 366122740332579915}
   m_Layer: 0
   m_Name: Boss Grandma PlaceHolder
   m_TagString: Enemy
@@ -565,6 +589,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &366122740332579915
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4250005425796993061}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 403f8553bcbb22b4ea06140ff06bf648, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyName: Grandma (BOSS)
 --- !u!1 &5304718894365306863
 GameObject:
   m_ObjectHideFlags: 0
@@ -576,6 +613,7 @@ GameObject:
   - component: {fileID: 2736364896465199638}
   - component: {fileID: 2712125666688428448}
   - component: {fileID: 5518504799885171190}
+  - component: {fileID: 2214381017671317582}
   m_Layer: 0
   m_Name: Wheel_C
   m_TagString: Untagged
@@ -651,6 +689,28 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &2214381017671317582
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5304718894365306863}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 5196126537605280114, guid: 74e4023ca8196a942a51f4ef03454806, type: 3}
 --- !u!1 &5856289263140519335
 GameObject:
   m_ObjectHideFlags: 0
@@ -662,6 +722,7 @@ GameObject:
   - component: {fileID: 5605681895453422013}
   - component: {fileID: 3039831555863521238}
   - component: {fileID: 6203359512954145530}
+  - component: {fileID: 711470916789409466}
   m_Layer: 0
   m_Name: Wheel_C002
   m_TagString: Untagged
@@ -737,6 +798,28 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &711470916789409466
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5856289263140519335}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -1059754166972669451, guid: 74e4023ca8196a942a51f4ef03454806, type: 3}
 --- !u!1 &6980923090767075661
 GameObject:
   m_ObjectHideFlags: 0
@@ -748,6 +831,7 @@ GameObject:
   - component: {fileID: 7321842938897515727}
   - component: {fileID: 6592389837897028018}
   - component: {fileID: 3093704594887881822}
+  - component: {fileID: 5541461517439250965}
   m_Layer: 0
   m_Name: Wheel_C003
   m_TagString: Untagged
@@ -823,6 +907,28 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &5541461517439250965
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6980923090767075661}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 7839801455377417424, guid: 74e4023ca8196a942a51f4ef03454806, type: 3}
 --- !u!1 &7072395846389052964
 GameObject:
   m_ObjectHideFlags: 0

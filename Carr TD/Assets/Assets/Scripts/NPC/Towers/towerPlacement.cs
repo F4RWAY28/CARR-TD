@@ -81,7 +81,7 @@ public class towerPlacement : MonoBehaviour
         int hits = Physics.OverlapSphereNonAlloc(previewInstance.transform.position, pathDetectionRadius, overlapResults);
         for (int i = 0; i < hits; i++)
         {
-            if (overlapResults[i].CompareTag("Enemy path"))
+            if (overlapResults[i].CompareTag("Enemy path") || overlapResults[i].CompareTag("Destructible"))
             {
                 collidingWithPath = true;
                 break;

@@ -47,6 +47,9 @@ public class Destructible : MonoBehaviour
         bool hitByRelevantObject =
             collision.gameObject.CompareTag("Enemy") ||
             collision.gameObject.CompareTag("Van1") ||
+            collision.gameObject.CompareTag("Van2") ||
+            collision.gameObject.CompareTag("Destructible") ||
+
             collision.gameObject.GetComponent<Destructible>() != null;
 
         if (!hitByRelevantObject) return;

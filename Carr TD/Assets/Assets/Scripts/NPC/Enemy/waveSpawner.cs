@@ -1,4 +1,5 @@
-using System.Collections;
+﻿using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -37,25 +38,41 @@ public class waveSpawner : MonoBehaviour
     {
         for (int w = 0; w < waves.Length; w++)
         {
-            // Use the wave index (w+1) so you always see Wave 1, Wave 2, etc.
             if (waveText != null)
                 waveText.text = "Wave: " + (w + 1);
 
             waveData wave = waves[w];
-
-            for (int i = 0; i < wave.enemiesInWave; i++)
+            if (wave.enemies == null || wave.enemies.Count == 0)
             {
-                // Round-robin enemy selection
-                enemyData data = wave.enemies[i % wave.enemies.Count];
+                Debug.LogWarning($"Wave {w + 1} has no enemies assigned!");
+                continue;
+            }
+
+            // 🔀 Create a randomized list of enemies for this wave
+            List<enemyData> randomizedEnemies = new List<enemyData>();
+            for (int i = 0; i < wave.enemiesInWave; i++)
+                randomizedEnemies.Add(wave.enemies[Random.Range(0, wave.enemies.Count)]);
+
+            // Shuffle the order
+            for (int i = 0; i < randomizedEnemies.Count; i++)
+            {
+                enemyData temp = randomizedEnemies[i];
+                int randomIndex = Random.Range(i, randomizedEnemies.Count);
+                randomizedEnemies[i] = randomizedEnemies[randomIndex];
+                randomizedEnemies[randomIndex] = temp;
+            }
+
+            // 🔁 Spawn enemies in this randomized order
+            foreach (enemyData data in randomizedEnemies)
+            {
                 if (data == null || data.enemyPrefab == null)
                 {
-                    Debug.LogWarning("waveSpawner: enemyData or prefab is null in wave " + (w + 1));
+                    Debug.LogWarning($"waveSpawner: enemyData or prefab is null in wave {w + 1}");
                     continue;
                 }
 
                 GameObject go = Instantiate(data.enemyPrefab, spawnPoint.position, spawnPoint.rotation);
 
-                // Apply enemy stats + waypoints
                 enemyPathing pathing = go.GetComponent<enemyPathing>();
                 if (pathing != null)
                 {
@@ -72,7 +89,7 @@ public class waveSpawner : MonoBehaviour
                 yield return new WaitForSeconds(timeBetweenEnemies);
             }
 
-            // Wait until all enemies are gone before starting next wave
+            // Wait until all enemies are gone before next wave
             while (GameObject.FindGameObjectsWithTag("Enemy").Length > 0)
                 yield return null;
 
