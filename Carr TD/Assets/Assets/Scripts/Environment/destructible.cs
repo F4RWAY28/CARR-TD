@@ -48,6 +48,7 @@ public class Destructible : MonoBehaviour
             collision.gameObject.CompareTag("Enemy") ||
             collision.gameObject.CompareTag("Van1") ||
             collision.gameObject.CompareTag("Van2") ||
+            collision.gameObject.CompareTag("Van3") ||
             collision.gameObject.CompareTag("Destructible") ||
 
             collision.gameObject.GetComponent<Destructible>() != null;

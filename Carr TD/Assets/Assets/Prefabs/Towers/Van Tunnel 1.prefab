@@ -785,6 +785,8 @@ MonoBehaviour:
   vanForce: 400
   turretHead: {fileID: 894380076371110075}
   range: 9
+  rotationSpeed: 8
+  aimThreshold: 5
 --- !u!114 &7845656422946460093
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -804,23 +806,46 @@ MonoBehaviour:
   vanPrefab: {fileID: 7460733030864014674, guid: 03e43988baa9baf4cb95923e45335006, type: 3}
   upgrades:
   - upgradeName: More Damage
-    cost: 720
+    cost: 920
     towerName: ANWB+
-    sellPrice: 935
+    upgradeColor: {r: 0, g: 1, b: 0.40635872, a: 1}
+    sellPrice: 755
     fireRateIncrease: 0
     damageIncrease: 1
     newVanPrefab: {fileID: 7084873509724961557, guid: 6cb1ef7c5eaba7f489f0d02d391d61c4, type: 3}
-    nextUpgrades: []
-    description: Multiplies damage by 2X!
+    nextUpgrades:
+    - upgradeName: Even More Damage
+      cost: 1300
+      towerName: ANWB++
+      upgradeColor: {r: 0, g: 1, b: 0.84967804, a: 1}
+      sellPrice: 932
+      fireRateIncrease: 0
+      damageIncrease: 2
+      newVanPrefab: {fileID: 3314715278145298677, guid: 115e031348fd598499a3aa6e724cc324, type: 3}
+      nextUpgrades: []
+      description: Multiplies current damage by 2X! (4)
+    description: Multiplies current damage by 2X! (2)
   - upgradeName: Faster Firing
-    cost: 680
+    cost: 915
     towerName: ANWB Premium
-    sellPrice: 915
+    upgradeColor: {r: 1, g: 0.5665205, b: 0, a: 1}
+    sellPrice: 680
     fireRateIncrease: -1.5
     damageIncrease: 0
     newVanPrefab: {fileID: 4650818321512169442, guid: e35be86e95e2994409c28190a836275b, type: 3}
-    nextUpgrades: []
-    description: Multiplies fire rate by 2X!
+    nextUpgrades:
+    - upgradeName: Even Faster Firing
+      cost: 1176
+      towerName: ANWB Dash
+      upgradeColor: {r: 1, g: 0, b: 0.30221462, a: 1}
+      sellPrice: 722
+      fireRateIncrease: -0.75
+      damageIncrease: 0
+      newVanPrefab: {fileID: 7863427829301732969, guid: b1c2dbe0a70f53f42a6ef5a123209524, type: 3}
+      nextUpgrades: []
+      description: Multiplies current fire rate by 2X! (4)
+    description: Multiplies fire rate by 2X! (2)
+  towerNameText: {fileID: 0}
   upgradeLevel: 0
 --- !u!65 &1507104790604601856
 BoxCollider:

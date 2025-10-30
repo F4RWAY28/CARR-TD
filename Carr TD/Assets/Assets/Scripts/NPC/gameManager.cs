@@ -7,29 +7,30 @@ public class gameManager : MonoBehaviour
     public static gameManager Instance;
 
     [Header("Player Stats")]
-    public int money = 1000;
+    public int money = 1000;              // Displayed money
+    private int actualMoney;              // True money
 
     [Header("UI")]
     public TMP_Text moneyText;
 
     [Header("Animation Settings")]
-    public float baseDurationPerUnit = 0.01f; // Counting speed per money change
-    public float scaleUpFactor = 1.2f;        // Pop size
-    public AnimationCurve easeCurve;          // Optional, can assign a curve in inspector
+    public float unitsPerSecond = 200f;   // How fast displayed money moves toward actual money
+    public float scaleUpFactor = 1.2f;
+    public AnimationCurve easeCurve;
 
     [Header("Sound")]
     public AudioSource audioSource;
     public AudioClip moneySound;
     public float pitchStep = 0.03f;
 
-    private Coroutine moneyRoutine;
-    private float currentPitch = 1f;
     private Vector3 originalScale;
     private Color originalColor;
+    private float currentPitch = 1f;
 
     private void Awake()
     {
         Instance = this;
+        actualMoney = money;
     }
 
     private void Start()
@@ -41,76 +42,58 @@ public class gameManager : MonoBehaviour
 
     public void AddMoney(int amount)
     {
-        StartMoneyChange(money + amount, Color.green);
+        actualMoney += amount;
+        if (!IsAnimating) StartCoroutine(AnimateMoney());
     }
 
     public void LoseMoney(int amount)
     {
-        StartMoneyChange(Mathf.Max(money - amount, 0), Color.red);
+        actualMoney = Mathf.Max(actualMoney - amount, 0);
+        if (!IsAnimating) StartCoroutine(AnimateMoney());
     }
 
-    private void StartMoneyChange(int targetMoney, Color activeColor)
+    private bool IsAnimating = false;
+
+    private IEnumerator AnimateMoney()
     {
-        // Reset before starting new animation
-        if (moneyRoutine != null)
-            StopCoroutine(moneyRoutine);
+        IsAnimating = true;
 
-        moneyText.rectTransform.localScale = originalScale;
-        moneyText.color = originalColor;
-
-        moneyRoutine = StartCoroutine(ChangeMoneyRoutine(targetMoney, activeColor));
-    }
-
-    private IEnumerator ChangeMoneyRoutine(int targetMoney, Color activeColor)
-    {
-        int startMoney = money;
-        int delta = Mathf.Abs(targetMoney - startMoney);
-        if (delta == 0) yield break;
-
-        // Duration scales with money difference
-        float duration = Mathf.Clamp(delta * baseDurationPerUnit, 0.3f, 3f);
-
-        float elapsed = 0f;
-        float pitch = currentPitch;
-
-        while (elapsed < duration)
+        while (money != actualMoney)
         {
-            elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / duration);
+            // Move displayed money toward actual money
+            int direction = actualMoney > money ? 1 : -1;
+            float step = unitsPerSecond * Time.deltaTime;
+            int newMoney = money + Mathf.Clamp((int)step * direction, direction, Mathf.Abs(actualMoney - money) * direction);
+            int delta = newMoney - money;
+            money = newMoney;
 
-            // Smooth out the curve (fast → slow)
-            float smoothT = easeCurve != null ? easeCurve.Evaluate(t) : Mathf.Sin(t * Mathf.PI * 0.5f);
-
-            // Interpolate money
-            money = (int)Mathf.Lerp(startMoney, targetMoney, smoothT);
+            // Update UI
             UpdateUIImmediate();
 
-            // Play sound
-            if (audioSource != null && moneySound != null)
-            {
-                audioSource.pitch = pitch;
-                audioSource.PlayOneShot(moneySound);
-                pitch += pitchStep;
-            }
-
             // Pop animation
-            float popT = Mathf.Sin(smoothT * Mathf.PI);
+            float popT = Mathf.Sin((Mathf.Abs(delta) / unitsPerSecond) * Mathf.PI);
             moneyText.rectTransform.localScale = Vector3.Lerp(originalScale, originalScale * scaleUpFactor, popT);
 
-            // Color transition
-            moneyText.color = Color.Lerp(activeColor, originalColor, smoothT);
+            // Color feedback
+            Color activeColor = delta > 0 ? Color.green : Color.red;
+            moneyText.color = Color.Lerp(activeColor, originalColor, Mathf.Abs(delta) / unitsPerSecond);
+
+            // Sound
+            if (audioSource != null && moneySound != null)
+            {
+                audioSource.pitch = currentPitch;
+                audioSource.PlayOneShot(moneySound);
+                currentPitch += pitchStep;
+            }
 
             yield return null;
         }
 
-        // Finalize
-        money = targetMoney;
+        // Reset
         moneyText.rectTransform.localScale = originalScale;
         moneyText.color = originalColor;
-        UpdateUIImmediate();
-
-        currentPitch = 1f; // Reset pitch after finish
-        moneyRoutine = null;
+        currentPitch = 1f;
+        IsAnimating = false;
     }
 
     private void UpdateUIImmediate()
