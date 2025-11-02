@@ -324,7 +324,6 @@ GameObject:
   - component: {fileID: 6353245427535028033}
   - component: {fileID: 3503450303670733138}
   - component: {fileID: 2366148548352421401}
-  - component: {fileID: -5414076387005297700}
   m_Layer: 0
   m_Name: Bob PlaceHolder
   m_TagString: Enemy
@@ -466,7 +465,7 @@ MonoBehaviour:
   moveSpeed: 4
   turnSpeed: 8
   lives: 6
-  maxLives: 100
+  maxLives: 6
   moneyReward: 90
   moneyLoss: 2500
   deathKnockbackForce: 5
@@ -476,11 +475,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: e484c5e272d1d9f44b3c84c74014ee36, type: 3}
   - {fileID: 8300000, guid: c0128e99ae6c96648a46e879563c1971, type: 3}
   - {fileID: 8300000, guid: 4c40d092e1c8c68468e28d5cc8b498db, type: 3}
-  healthBarPrefab: {fileID: 2086592484178215970, guid: cba2b5bd50d9fc14ca87d08771dfbf68, type: 3}
+  healthBarPrefab: {fileID: 8893272076275367085, guid: 9cdafb8682854f64488c902cb7ca6f1e, type: 3}
   healthBarOffset: {x: 0, y: 2, z: 0}
-  healthColor: {r: 0, g: 1, b: 0, a: 1}
-  damageColor: {r: 1, g: 0, b: 0, a: 1}
-  damageLerpSpeed: 8
+  damageLerpSpeed: 4
   fadeDuration: 2
 --- !u!114 &1483035651438349514
 MonoBehaviour:
@@ -788,22 +785,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &-5414076387005297700
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4870471023754306576}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 403f8553bcbb22b4ea06140ff06bf648, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyName: Bob
-  lives: 6
-  moneyLoss: 2500
-  speed: 4
 --- !u!1 &5506273428649391771
 GameObject:
   m_ObjectHideFlags: 0

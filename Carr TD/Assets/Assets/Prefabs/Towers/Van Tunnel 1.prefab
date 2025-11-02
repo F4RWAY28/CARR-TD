@@ -197,7 +197,7 @@ Transform:
   m_GameObject: {fileID: 2907273857026397243}
   serializedVersion: 2
   m_LocalRotation: {x: 0.001003302, y: -0.00002383687, z: 0.023751708, w: 0.9997174}
-  m_LocalPosition: {x: -0.044, y: 0.201, z: 0.839}
+  m_LocalPosition: {x: -0.044, y: 0.267, z: 0.839}
   m_LocalScale: {x: 0.7313426, y: 0.38595143, z: 0.38595137}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -807,8 +807,7 @@ MonoBehaviour:
   upgrades:
   - upgradeName: More Damage
     cost: 920
-    towerName: ANWB+
-    upgradeColor: {r: 0, g: 1, b: 0.40635872, a: 1}
+    towerName: ANWB Pro
     sellPrice: 755
     fireRateIncrease: 0
     damageIncrease: 1
@@ -816,8 +815,7 @@ MonoBehaviour:
     nextUpgrades:
     - upgradeName: Even More Damage
       cost: 1300
-      towerName: ANWB++
-      upgradeColor: {r: 0, g: 1, b: 0.84967804, a: 1}
+      towerName: ANWB Pro Max
       sellPrice: 932
       fireRateIncrease: 0
       damageIncrease: 2
@@ -828,7 +826,6 @@ MonoBehaviour:
   - upgradeName: Faster Firing
     cost: 915
     towerName: ANWB Premium
-    upgradeColor: {r: 1, g: 0.5665205, b: 0, a: 1}
     sellPrice: 680
     fireRateIncrease: -1.5
     damageIncrease: 0
@@ -837,7 +834,6 @@ MonoBehaviour:
     - upgradeName: Even Faster Firing
       cost: 1176
       towerName: ANWB Dash
-      upgradeColor: {r: 1, g: 0, b: 0.30221462, a: 1}
       sellPrice: 722
       fireRateIncrease: -0.75
       damageIncrease: 0
@@ -845,7 +841,6 @@ MonoBehaviour:
       nextUpgrades: []
       description: Multiplies current fire rate by 2X! (4)
     description: Multiplies fire rate by 2X! (2)
-  towerNameText: {fileID: 0}
   upgradeLevel: 0
 --- !u!65 &1507104790604601856
 BoxCollider:

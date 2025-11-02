@@ -547,7 +547,6 @@ GameObject:
   - component: {fileID: 1664758824675407258}
   - component: {fileID: 4569202385773242522}
   - component: {fileID: 2798720916954767567}
-  - component: {fileID: 1041210906443213943}
   m_Layer: 0
   m_Name: Car Placeholder
   m_TagString: Enemy
@@ -641,7 +640,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 1, y: 0.6149801, z: 2.983417}
   m_Center: {x: 0, y: -0.22981006, z: 0.0737617}
@@ -688,7 +687,7 @@ MonoBehaviour:
   - {fileID: 0}
   moveSpeed: 3
   turnSpeed: 6
-  lives: 100
+  lives: 1
   maxLives: 1
   moneyReward: 25
   moneyLoss: 500
@@ -699,11 +698,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: e484c5e272d1d9f44b3c84c74014ee36, type: 3}
   - {fileID: 8300000, guid: c0128e99ae6c96648a46e879563c1971, type: 3}
   - {fileID: 8300000, guid: 4c40d092e1c8c68468e28d5cc8b498db, type: 3}
-  healthBarPrefab: {fileID: 2086592484178215970, guid: cba2b5bd50d9fc14ca87d08771dfbf68, type: 3}
+  healthBarPrefab: {fileID: 8893272076275367085, guid: 9cdafb8682854f64488c902cb7ca6f1e, type: 3}
   healthBarOffset: {x: 0, y: 2, z: 0}
-  healthColor: {r: 0, g: 1, b: 0, a: 1}
-  damageColor: {r: 1, g: 0, b: 0, a: 1}
-  damageLerpSpeed: 8
+  damageLerpSpeed: 4
   fadeDuration: 2
 --- !u!65 &3478892876578909850
 BoxCollider:
@@ -1032,22 +1029,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &1041210906443213943
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7242646670505412009}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 403f8553bcbb22b4ea06140ff06bf648, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyName: Student
-  lives: 1
-  moneyLoss: 500
-  speed: 3
 --- !u!1 &8895792697320297541
 GameObject:
   m_ObjectHideFlags: 0

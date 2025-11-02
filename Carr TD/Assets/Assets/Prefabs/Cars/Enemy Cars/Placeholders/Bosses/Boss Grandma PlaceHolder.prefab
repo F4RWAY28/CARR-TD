@@ -127,7 +127,6 @@ GameObject:
   - component: {fileID: 182495413900206117}
   - component: {fileID: 4933479662686880101}
   - component: {fileID: -3899471282162044310}
-  - component: {fileID: 366122740332579915}
   m_Layer: 0
   m_Name: Boss Grandma PlaceHolder
   m_TagString: Enemy
@@ -269,7 +268,7 @@ MonoBehaviour:
   moveSpeed: 2
   turnSpeed: 4
   lives: 30
-  maxLives: 100
+  maxLives: 30
   moneyReward: 1000
   moneyLoss: 13000
   deathKnockbackForce: 5
@@ -277,11 +276,9 @@ MonoBehaviour:
   deathSounds:
   - {fileID: 8300000, guid: 4560c22f122545c498b16a99ad05f3a3, type: 3}
   - {fileID: 8300000, guid: ca096c381df27754aa2b50b9ee892ff1, type: 3}
-  healthBarPrefab: {fileID: 2086592484178215970, guid: cba2b5bd50d9fc14ca87d08771dfbf68, type: 3}
+  healthBarPrefab: {fileID: 8893272076275367085, guid: 9cdafb8682854f64488c902cb7ca6f1e, type: 3}
   healthBarOffset: {x: 0, y: 2, z: 0}
-  healthColor: {r: 0, g: 1, b: 0.8364992, a: 1}
-  damageColor: {r: 1, g: 0, b: 0, a: 1}
-  damageLerpSpeed: 8
+  damageLerpSpeed: 4
   fadeDuration: 2
 --- !u!114 &4409611555367964563
 MonoBehaviour:
@@ -589,19 +586,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &366122740332579915
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4250005425796993061}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 403f8553bcbb22b4ea06140ff06bf648, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyName: Grandma (BOSS)
 --- !u!1 &5304718894365306863
 GameObject:
   m_ObjectHideFlags: 0

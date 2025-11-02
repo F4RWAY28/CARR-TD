@@ -166,7 +166,7 @@ public class towerPlacement : MonoBehaviour
 
         GameObject tower = Instantiate(towerPrefab, previewInstance.transform.position, Quaternion.identity);
         tower.tag = "Tower"; // ensure tag is set on placement
-        gameManager.Instance.LoseMoney(towerCost);
+        gameManager.Instance.TrySpendMoney(towerCost);
 
         StartCoroutine(FlashPlacedTower(tower));
         EndPlacement();

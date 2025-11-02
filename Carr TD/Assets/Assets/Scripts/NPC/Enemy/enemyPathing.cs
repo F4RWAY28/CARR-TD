@@ -12,8 +12,8 @@ public class enemyPathing : MonoBehaviour
     public float turnSpeed = 5f;
 
     [Header("Stats")]
-    public int lives = 100;
-    public int maxLives = 100;
+    public int lives = 3;            // Number of life segments
+    public int maxLives = 3;         // Total life segments
     public int moneyReward = 1;
     public int moneyLoss = 1;
 
@@ -24,12 +24,9 @@ public class enemyPathing : MonoBehaviour
     [Header("Death Sounds")]
     public AudioClip[] deathSounds;
 
-    [Header("Health Bar")]
-    [Tooltip("Prefab with two Image children: red (damage) and green (health)")]
+    [Header("Health Bar (Slider)")]
     public GameObject healthBarPrefab;
     public Vector3 healthBarOffset = new Vector3(0, 2f, 0);
-    public Color healthColor = Color.green;
-    public Color damageColor = Color.red;
     public float damageLerpSpeed = 4f;
     public float fadeDuration = 1f;
 
@@ -38,8 +35,8 @@ public class enemyPathing : MonoBehaviour
     private AudioSource mainAudioSource;
 
     private GameObject healthBarInstance;
-    private Image healthFill;
-    private Image damageFill;
+    private Slider healthSlider;
+    private Image fillImage;
     private CanvasGroup canvasGroup;
     private Camera cam;
 
@@ -57,6 +54,11 @@ public class enemyPathing : MonoBehaviour
 
         cam = Camera.main;
 
+        SetupHealthBar();
+    }
+
+    void SetupHealthBar()
+    {
         if (healthBarPrefab != null)
         {
             healthBarInstance = Instantiate(healthBarPrefab, transform.position + healthBarOffset, Quaternion.identity);
@@ -66,20 +68,21 @@ public class enemyPathing : MonoBehaviour
             if (canvasGroup == null)
                 canvasGroup = healthBarInstance.AddComponent<CanvasGroup>();
 
-            Image[] imgs = healthBarInstance.GetComponentsInChildren<Image>(true);
-            if (imgs.Length >= 2)
+            healthSlider = healthBarInstance.GetComponentInChildren<Slider>();
+            if (healthSlider == null)
             {
-                damageFill = imgs[0];
-                healthFill = imgs[1];
-                damageFill.color = damageColor;
-                healthFill.color = healthColor;
-                healthFill.fillAmount = 1f;
-                damageFill.fillAmount = 1f;
+                Debug.LogError("HealthBar prefab must contain a Slider component!");
+                return;
             }
-            else
-            {
-                Debug.LogError("HealthBar prefab must have two Image children (red for damage, green for health).");
-            }
+
+            fillImage = healthSlider.fillRect?.GetComponent<Image>();
+            if (fillImage != null)
+                fillImage.color = Color.green;
+
+            // Set slider max value to maxLives for segmented display
+            healthSlider.minValue = 0;
+            healthSlider.maxValue = maxLives;
+            healthSlider.value = lives;
         }
     }
 
@@ -89,11 +92,6 @@ public class enemyPathing : MonoBehaviour
             MoveAlongPath();
 
         UpdateHealthBarPosition();
-
-        if (damageFill != null && healthFill != null && damageFill.fillAmount > healthFill.fillAmount)
-        {
-            damageFill.fillAmount = Mathf.Lerp(damageFill.fillAmount, healthFill.fillAmount, Time.deltaTime * damageLerpSpeed);
-        }
     }
 
     void MoveAlongPath()
@@ -103,7 +101,6 @@ public class enemyPathing : MonoBehaviour
         Transform target = waypoints[waypointIndex];
         Vector3 direction = (target.position - transform.position).normalized;
 
-        // ✅ Allow rotation to follow full 3D direction (including up/down tilt)
         if (direction.sqrMagnitude > 0.001f)
         {
             Quaternion targetRotation = Quaternion.LookRotation(direction, Vector3.up);
@@ -135,11 +132,46 @@ public class enemyPathing : MonoBehaviour
         lives -= damage;
         lives = Mathf.Clamp(lives, 0, maxLives);
 
-        if (healthFill != null)
-            healthFill.fillAmount = (float)lives / maxLives;
+        if (healthSlider != null)
+        {
+            StopAllCoroutines();
+            StartCoroutine(SmoothHealthChange());
+        }
 
         if (lives <= 0)
             Die();
+    }
+
+    private IEnumerator SmoothHealthChange()
+    {
+        float startValue = healthSlider.value;
+        float targetValue = lives;
+        float elapsed = 0f;
+
+        while (elapsed < 1f)
+        {
+            elapsed += Time.deltaTime * damageLerpSpeed;
+            healthSlider.value = Mathf.Lerp(startValue, targetValue, elapsed);
+
+            UpdateHealthBarColor();
+            yield return null;
+        }
+
+        healthSlider.value = targetValue;
+        UpdateHealthBarColor();
+    }
+
+    private void UpdateHealthBarColor()
+    {
+        if (fillImage == null || healthSlider == null) return;
+
+        float healthPercent = healthSlider.value / maxLives;
+
+        // Green → Yellow → Red based on total lives
+        if (healthPercent > 0.5f)
+            fillImage.color = Color.Lerp(Color.yellow, Color.green, (healthPercent - 0.5f) * 2f);
+        else
+            fillImage.color = Color.Lerp(Color.red, Color.yellow, healthPercent * 2f);
     }
 
     void Die()
@@ -185,7 +217,7 @@ public class enemyPathing : MonoBehaviour
     void ReachEnd()
     {
         if (gameManager.Instance != null)
-            gameManager.Instance.LoseMoney(moneyLoss);
+            gameManager.Instance.ForceSpendMoney(moneyLoss);
 
         if (healthBarInstance != null)
             Destroy(healthBarInstance);

@@ -271,7 +271,7 @@ public class towerSelectionManager : MonoBehaviour
         var upgrade = CurrentSelection.GetUpgrades()[index];
         if (gameManager.Instance.money < upgrade.cost) return;
 
-        gameManager.Instance.LoseMoney(upgrade.cost);
+        gameManager.Instance.TrySpendMoney(upgrade.cost);
         CurrentSelection.ApplyUpgrade(index);
 
         HideTooltip();
