@@ -43,6 +43,10 @@ public class enemyPathing : MonoBehaviour
     private int waypointIndex = 0;
     public int WaypointIndex => waypointIndex;
 
+    // Event for enemy death
+    public delegate void EnemyDeathHandler(enemyPathing enemy);
+    public event EnemyDeathHandler OnEnemyDeath;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -79,7 +83,6 @@ public class enemyPathing : MonoBehaviour
             if (fillImage != null)
                 fillImage.color = Color.green;
 
-            // Set slider max value to maxLives for segmented display
             healthSlider.minValue = 0;
             healthSlider.maxValue = maxLives;
             healthSlider.value = lives;
@@ -167,7 +170,6 @@ public class enemyPathing : MonoBehaviour
 
         float healthPercent = healthSlider.value / maxLives;
 
-        // Green → Yellow → Red based on total lives
         if (healthPercent > 0.5f)
             fillImage.color = Color.Lerp(Color.yellow, Color.green, (healthPercent - 0.5f) * 2f);
         else
@@ -194,6 +196,9 @@ public class enemyPathing : MonoBehaviour
 
         if (healthBarInstance != null)
             StartCoroutine(FadeOutHealthBar());
+
+        // Trigger enemy death event
+        OnEnemyDeath?.Invoke(this);
 
         Destroy(gameObject, 5f);
     }

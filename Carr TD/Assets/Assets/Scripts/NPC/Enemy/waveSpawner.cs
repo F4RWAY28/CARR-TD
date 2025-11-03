@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 
@@ -137,11 +138,22 @@ public class waveSpawner : MonoBehaviour
                 yield return StartCoroutine(CountdownRoutine(nextWaveCountdown));
         }
 
-        if (waveText != null)
+        if (waveText != null && FindObjectsOfType<enemyPathing>().All(e => e.lives <= 0))
         {
             waveText.gameObject.SetActive(true);
-            waveText.text = "Waves Defeated!";
+            waveText.text = "You Win!";
             waveText.color = new Color(waveText.color.r, waveText.color.g, waveText.color.b, 1f);
+
+            // Find the SceneFader in the scene
+            sceneFader fader = FindObjectOfType<sceneFader>();
+            if (fader != null)
+            {
+                fader.FadeToScene(); // Call the fade function
+            }
+            else
+            {
+                Debug.LogWarning("No sceneFader found in the scene!");
+            }
         }
 
         if (countdownText != null)

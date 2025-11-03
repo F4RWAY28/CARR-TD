@@ -98,7 +98,7 @@ public class sceneFader : MonoBehaviour
         if (holdBlackTime > 0f)
             yield return new WaitForSecondsRealtime(holdBlackTime);
 
-        SceneManager.LoadScene(sceneName);
+        SceneManager.LoadScene(targetSceneName);
     }
 
     private void SetAlpha(float alpha)
