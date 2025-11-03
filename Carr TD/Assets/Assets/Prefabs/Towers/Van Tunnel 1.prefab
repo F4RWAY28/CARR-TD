@@ -841,6 +841,10 @@ MonoBehaviour:
       nextUpgrades: []
       description: Multiplies current fire rate by 2X! (4)
     description: Multiplies fire rate by 2X! (2)
+  upgradeSound: {fileID: 8300000, guid: 239b398d6267c77499c49b5b3d232679, type: 3}
+  upgradeSoundVolume: 1
+  sellSound: {fileID: 8300000, guid: b66d0ef84711a0946a30b94f41dced5e, type: 3}
+  sellSoundVolume: 1
   upgradeLevel: 0
 --- !u!65 &1507104790604601856
 BoxCollider:

@@ -15,9 +15,16 @@ public class towerInteractable : MonoBehaviour
     [Header("Upgrades")]
     public StatUpgradeOption[] upgrades;
 
+    [Header("Audio")]
+    public AudioClip upgradeSound; // Sound played when upgrading
+    public float upgradeSoundVolume = 1f;
+    public AudioClip sellSound;    // Sound played when selling
+    public float sellSoundVolume = 1f;
+
     [HideInInspector] public int upgradeLevel = 0;
 
     private tower towerScript;
+    private AudioSource audioSource;
 
     // Range change event for selection manager
     public System.Action OnRangeChanged;
@@ -26,6 +33,16 @@ public class towerInteractable : MonoBehaviour
     {
         towerScript = GetComponent<tower>();
         SyncTowerStats();
+
+        // Setup audio source
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+            audioSource.playOnAwake = false;
+            audioSource.spatialBlend = 1f; // Make sound 3D
+            audioSource.maxDistance = 15f;
+        }
     }
 
     private void OnMouseEnter()
@@ -72,10 +89,32 @@ public class towerInteractable : MonoBehaviour
         upgradeLevel++;
         SyncTowerStats();
 
-        // Notify range change if towerRange is affected
+        // Notify range change
         OnRangeChanged?.Invoke();
 
+        // Play upgrade sound
+        if (upgradeSound != null && audioSource != null)
+            audioSource.PlayOneShot(upgradeSound, upgradeSoundVolume);
+
         Debug.Log($"{towerName} upgraded with '{upgrade.upgradeName}' (Level {upgradeLevel})");
+    }
+
+    public void SellTower()
+    {
+        // Notify range change or other systems if needed
+        OnRangeChanged?.Invoke();
+
+        // Play sell sound
+        if (sellSound != null && audioSource != null)
+            audioSource.PlayOneShot(sellSound, sellSoundVolume);
+
+        // Example: give player money here
+        gameManager.Instance.AddMoney(baseSellPrice);
+
+        // Optionally, destroy tower
+        Destroy(gameObject);
+
+        Debug.Log($"{towerName} sold for {baseSellPrice}");
     }
 
     private void SyncTowerStats()
@@ -91,7 +130,6 @@ public class towerInteractable : MonoBehaviour
     public StatUpgradeOption[] GetUpgrades() => upgrades;
     public int GetSellPrice() => baseSellPrice;
 
-    // Optional: method for selection manager to get range
     public float GetRange() => towerScript != null ? towerScript.range : 0f;
 }
 

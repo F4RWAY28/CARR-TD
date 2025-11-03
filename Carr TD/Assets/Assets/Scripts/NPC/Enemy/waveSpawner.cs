@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class waveSpawner : MonoBehaviour
 {
-    public static waveSpawner Instance; // Singleton
+    public static waveSpawner Instance;
 
     [Header("Spawner Settings")]
     public Transform spawnPoint;
@@ -19,11 +19,16 @@ public class waveSpawner : MonoBehaviour
     public waveData[] waves;
 
     [Header("UI")]
-    public TMP_Text waveText;       // fades in when wave starts
-    public TMP_Text countdownText;  // countdown display
+    public TMP_Text waveText;
+    public TMP_Text countdownText;
+
+    [Header("Sounds")]
+    public AudioClip countdownTickSound;
+    public AudioClip waveStartSound;
+    public AudioSource audioSource; // optional; can be assigned manually
 
     private Transform[] waypoints;
-    private int currentWaveIndex = 0; // tracks current wave
+    private int currentWaveIndex = 0;
 
     private void Awake()
     {
@@ -33,7 +38,11 @@ public class waveSpawner : MonoBehaviour
 
     private void Start()
     {
-        // build waypoint array
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
+
         if (pathParent != null)
         {
             int count = pathParent.childCount;
@@ -42,7 +51,6 @@ public class waveSpawner : MonoBehaviour
                 waypoints[i] = pathParent.GetChild(i);
         }
 
-        // Hide UI
         if (waveText != null)
         {
             waveText.color = new Color(waveText.color.r, waveText.color.g, waveText.color.b, 0f);
@@ -61,16 +69,19 @@ public class waveSpawner : MonoBehaviour
 
     private IEnumerator RunWaves()
     {
-        // Initial countdown before first wave
         if (countdownText != null)
             yield return StartCoroutine(CountdownRoutine(firstWaveCountdown));
 
         for (int w = 0; w < waves.Length; w++)
         {
             if (gameManager.Instance != null && gameManager.Instance.GetMoney() <= 0)
-                yield break; // stop spawning if game over
+                yield break;
 
             currentWaveIndex = w + 1;
+
+            // 🔊 Play wave start sound
+            if (waveStartSound != null && audioSource != null)
+                audioSource.PlayOneShot(waveStartSound);
 
             if (waveText != null)
                 yield return StartCoroutine(ShowWaveTextAndFlashColor(currentWaveIndex));
@@ -82,12 +93,10 @@ public class waveSpawner : MonoBehaviour
                 continue;
             }
 
-            // Randomize enemies
             List<enemyData> randomizedEnemies = new List<enemyData>();
             for (int i = 0; i < wave.enemiesInWave; i++)
                 randomizedEnemies.Add(wave.enemies[Random.Range(0, wave.enemies.Count)]);
 
-            // Shuffle
             for (int i = 0; i < randomizedEnemies.Count; i++)
             {
                 enemyData temp = randomizedEnemies[i];
@@ -96,11 +105,10 @@ public class waveSpawner : MonoBehaviour
                 randomizedEnemies[randomIndex] = temp;
             }
 
-            // Spawn enemies
             foreach (enemyData data in randomizedEnemies)
             {
                 if (gameManager.Instance != null && gameManager.Instance.GetMoney() <= 0)
-                    yield break; // stop spawning if game over
+                    yield break;
 
                 if (data == null || data.enemyPrefab == null)
                 {
@@ -125,12 +133,10 @@ public class waveSpawner : MonoBehaviour
                 yield return new WaitForSeconds(timeBetweenEnemies);
             }
 
-            // Countdown before next wave
             if (w < waves.Length - 1 && countdownText != null)
                 yield return StartCoroutine(CountdownRoutine(nextWaveCountdown));
         }
 
-        // Finished all waves
         if (waveText != null)
         {
             waveText.gameObject.SetActive(true);
@@ -152,7 +158,6 @@ public class waveSpawner : MonoBehaviour
         countdownText.gameObject.SetActive(true);
         countdownText.color = new Color(countdownText.color.r, countdownText.color.g, countdownText.color.b, 0f);
 
-        // Fade in
         float fadeInDuration = 0.75f;
         float tFade = 0f;
         while (tFade < fadeInDuration)
@@ -166,13 +171,23 @@ public class waveSpawner : MonoBehaviour
 
         float remaining = duration;
         float pulseSpeed = 8f;
+        float lastSecond = Mathf.CeilToInt(remaining);
 
         while (remaining > 0f)
         {
             if (gameManager.Instance != null && gameManager.Instance.GetMoney() <= 0)
-                break; // stop countdown if game over
+                break;
 
-            countdownText.text = "Next Wave In: " + Mathf.CeilToInt(remaining);
+            int seconds = Mathf.CeilToInt(remaining);
+            countdownText.text = "Next Wave In: " + seconds;
+
+            // 🔊 Play tick sound once per second
+            if (seconds < lastSecond)
+            {
+                lastSecond = seconds;
+                if (countdownTickSound != null && audioSource != null)
+                    audioSource.PlayOneShot(countdownTickSound);
+            }
 
             float progress = 1f - (remaining / duration);
             Color c = Color.Lerp(Color.green, Color.red, progress);
@@ -218,7 +233,6 @@ public class waveSpawner : MonoBehaviour
         float fadeInDur = 0.6f;
         float elapsed = 0f;
 
-        // Fade in
         while (elapsed < fadeInDur)
         {
             elapsed += Time.deltaTime;
@@ -231,7 +245,6 @@ public class waveSpawner : MonoBehaviour
 
         waveText.color = new Color(originalColor.r, originalColor.g, originalColor.b, 1f);
 
-        // Short blue flash
         Color blueColor = new Color(0.2f, 0.6f, 1f, 1f);
         float flashDur = 0.2f;
 

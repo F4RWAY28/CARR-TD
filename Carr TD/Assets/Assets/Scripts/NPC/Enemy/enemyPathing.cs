@@ -26,7 +26,7 @@ public class enemyPathing : MonoBehaviour
 
     [Header("Health Bar (Slider)")]
     public GameObject healthBarPrefab;
-    public Vector3 healthBarOffset = new Vector3(0, 2f, 0);
+    public Vector3 healthBarOffset = new Vector3(0, 0.6f, 0);
     public float damageLerpSpeed = 4f;
     public float fadeDuration = 1f;
 

@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using TMPro;
 using System.Collections;
 
@@ -50,7 +50,7 @@ public class gameManager : MonoBehaviour
 
     public void AddMoney(int amount)
     {
-        if (isGameOver) return; // stop adding money after game over
+        if (isGameOver) return;
         actualMoney += amount;
         if (!isAnimating) StartCoroutine(AnimateMoney());
     }
@@ -90,26 +90,20 @@ public class gameManager : MonoBehaviour
         {
             isGameOver = true;
 
-            // Save waves reached
+            // Save waves reached if needed
             if (waveSpawner.Instance != null)
-            {
                 gameSessionData.Instance.wavesReached = waveSpawner.Instance.GetCurrentWave();
-            }
 
-            // Stop gameplay
-            Time.timeScale = 0f;
-
-            // Trigger the scene fade and game over sequence
-            if (sceneFadeManager.Instance != null)
+            // Trigger fade to Game Over scene
+            sceneFader fader = FindObjectOfType<sceneFader>();
+            if (fader != null)
             {
-                sceneFadeManager.Instance.TriggerGameOver(
-                    gameSessionData.Instance.wavesReached,
-                    sceneFadeManager.Instance.gameOverSceneName
-                );
+                fader.FadeToScene("GameOver");
             }
             else
             {
-                Debug.LogWarning("sceneFadeManager instance not found!");
+                Debug.LogWarning("SceneFader not found!");
+                Time.timeScale = 0f; // fallback
             }
         }
     }
@@ -127,7 +121,7 @@ public class gameManager : MonoBehaviour
             int oldMoney = money;
             int deltaAmount = actualMoney - money;
 
-            float step = Mathf.Max(1f, Mathf.Abs(deltaAmount)) * unitsPerSecond * Time.deltaTime / 100f;
+            float step = Mathf.Max(1f, Mathf.Abs(deltaAmount)) * unitsPerSecond * Time.unscaledDeltaTime / 100f;
             money = Mathf.RoundToInt(Mathf.MoveTowards(money, actualMoney, step));
             int delta = money - oldMoney;
 
@@ -151,6 +145,10 @@ public class gameManager : MonoBehaviour
             yield return null;
         }
 
+        money = Mathf.Max(0, actualMoney);
+        UpdateUIImmediate();
+        CheckGameOver();
+
         moneyText.rectTransform.localScale = originalScale;
         moneyText.color = originalColor;
         currentPitch = 1f;
@@ -168,7 +166,7 @@ public class gameManager : MonoBehaviour
 
         while (elapsed < flashDuration)
         {
-            elapsed += Time.deltaTime;
+            elapsed += Time.unscaledDeltaTime;
             float t = Mathf.PingPong(elapsed * 4f, 1f);
             moneyText.color = Color.Lerp(originalColor, Color.red, t);
             yield return null;
@@ -184,6 +182,8 @@ public class gameManager : MonoBehaviour
 
     private void PlaySound(AudioClip clip, float pitch)
     {
+        if (clip == null) return;
+
         GameObject soundObj = new GameObject("TempSound");
         AudioSource source = soundObj.AddComponent<AudioSource>();
         source.clip = clip;
@@ -196,6 +196,8 @@ public class gameManager : MonoBehaviour
 
     #endregion
 
+    #region UI
+
     private void UpdateUIImmediate()
     {
         if (moneyText != null)
@@ -203,4 +205,43 @@ public class gameManager : MonoBehaviour
     }
 
     public int GetMoney() => money;
+
+    #endregion
+
+    #region Fade Control
+
+    /// <summary>
+    /// Triggers a fade to a specific scene using the sceneFader.
+    /// </summary>
+    /// <param name="sceneName">The scene to fade to.</param>
+    public void TriggerFadeToScene(string sceneName)
+    {
+        sceneFader fader = FindObjectOfType<sceneFader>();
+        if (fader != null)
+        {
+            fader.FadeToScene(sceneName);
+        }
+        else
+        {
+            Debug.LogWarning("SceneFader not found!");
+        }
+    }
+
+    /// <summary>
+    /// Triggers a fade to the default target scene set in the sceneFader inspector.
+    /// </summary>
+    public void TriggerFadeToDefaultScene()
+    {
+        sceneFader fader = FindObjectOfType<sceneFader>();
+        if (fader != null)
+        {
+            fader.FadeToScene();
+        }
+        else
+        {
+            Debug.LogWarning("SceneFader not found!");
+        }
+    }
+
+    #endregion
 }

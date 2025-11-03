@@ -497,7 +497,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: c0128e99ae6c96648a46e879563c1971, type: 3}
   - {fileID: 8300000, guid: 4c40d092e1c8c68468e28d5cc8b498db, type: 3}
   healthBarPrefab: {fileID: 8893272076275367085, guid: 9cdafb8682854f64488c902cb7ca6f1e, type: 3}
-  healthBarOffset: {x: 0, y: 2, z: 0}
+  healthBarOffset: {x: 0, y: 1, z: 0}
   damageLerpSpeed: 4
   fadeDuration: 2
 --- !u!114 &-7412222474575505106

@@ -16,7 +16,12 @@ public class towerPlacement : MonoBehaviour
     public Vector3 previewScale = Vector3.one;
 
     [Header("Collision & Detection Settings")]
-    public float pathDetectionRadius = 1.5f; // Prevent placement near paths
+    public float pathDetectionRadius = 1.5f;
+
+    [Header("Sound Settings")]
+    public AudioClip placeSound;
+    [Range(0f, 1f)] public float placeVolume = 1f;
+    public AudioSource audioSource; // optional; created automatically if left empty
 
     private GameObject previewInstance;
     private LineRenderer rangeRenderer;
@@ -24,6 +29,16 @@ public class towerPlacement : MonoBehaviour
     private bool canPlace = false;
     private Renderer[] previewRenderers;
     private Collider[] overlapResults = new Collider[20];
+
+    void Start()
+    {
+        // If no AudioSource is assigned, create one automatically
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+            audioSource.playOnAwake = false;
+        }
+    }
 
     void Update()
     {
@@ -88,7 +103,7 @@ public class towerPlacement : MonoBehaviour
             }
         }
 
-        // Check collision with towers using collider overlap
+        // Check for other towers
         Collider previewCollider = previewInstance.GetComponent<Collider>();
         if (previewCollider != null)
         {
@@ -165,8 +180,12 @@ public class towerPlacement : MonoBehaviour
         if (gameManager.Instance.money < towerCost || !canPlace) return;
 
         GameObject tower = Instantiate(towerPrefab, previewInstance.transform.position, Quaternion.identity);
-        tower.tag = "Tower"; // ensure tag is set on placement
+        tower.tag = "Tower";
         gameManager.Instance.TrySpendMoney(towerCost);
+
+        // 🔊 Play placement sound
+        if (placeSound != null && audioSource != null)
+            audioSource.PlayOneShot(placeSound, placeVolume);
 
         StartCoroutine(FlashPlacedTower(tower));
         EndPlacement();
