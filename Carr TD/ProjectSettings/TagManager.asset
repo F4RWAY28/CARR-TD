@@ -13,6 +13,7 @@ TagManager:
   - Ground
   - Tower
   - Destructible
+  - Water
   layers:
   - Default
   - TransparentFX

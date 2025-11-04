@@ -32,8 +32,8 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4714270492901134398}
-  - {fileID: 2632784221108330099}
   - {fileID: 5607588906283552969}
+  - {fileID: 2632784221108330099}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -217,6 +217,10 @@ PrefabInstance:
     - target: {fileID: 118189059453457552, guid: 54df55f37ff75784f8bdc5ab173d0e6d, type: 3}
       propertyPath: m_Name
       value: Black Screen
+      objectReference: {fileID: 0}
+    - target: {fileID: 118189059453457552, guid: 54df55f37ff75784f8bdc5ab173d0e6d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2611790953657853513, guid: 54df55f37ff75784f8bdc5ab173d0e6d, type: 3}
       propertyPath: m_Pivot.x

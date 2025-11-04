@@ -29,6 +29,7 @@ public class waveSpawner : MonoBehaviour
 
     private Transform[] waypoints;
     private int currentWaveIndex = 0;
+    private bool timerStarted = false; // ✅ To make sure timer starts only once
 
     private void Awake()
     {
@@ -77,11 +78,19 @@ public class waveSpawner : MonoBehaviour
                 if (gameSessionManager.Instance != null)
                     gameSessionManager.Instance.playerWon = false;
 
+                StopTimerIfRunning(); // ✅ Stop timer if lost
                 TriggerGameOver();
                 yield break;
             }
 
             currentWaveIndex = w + 1;
+
+            // ✅ Start timer only once (when first wave begins)
+            if (!timerStarted && timer.Instance != null)
+            {
+                timer.Instance.StartTimer();
+                timerStarted = true;
+            }
 
             // Update session manager
             if (gameSessionManager.Instance != null)
@@ -104,7 +113,7 @@ public class waveSpawner : MonoBehaviour
             for (int i = 0; i < wave.enemiesInWave; i++)
                 randomizedEnemies.Add(wave.enemies[Random.Range(0, wave.enemies.Count)]);
 
-            // Shuffle
+            // Shuffle enemies
             for (int i = 0; i < randomizedEnemies.Count; i++)
             {
                 enemyData temp = randomizedEnemies[i];
@@ -113,6 +122,7 @@ public class waveSpawner : MonoBehaviour
                 randomizedEnemies[randomIndex] = temp;
             }
 
+            // Spawn enemies
             foreach (enemyData data in randomizedEnemies)
             {
                 if (gameManager.Instance != null && gameManager.Instance.GetMoney() <= 0)
@@ -120,6 +130,7 @@ public class waveSpawner : MonoBehaviour
                     if (gameSessionManager.Instance != null)
                         gameSessionManager.Instance.playerWon = false;
 
+                    StopTimerIfRunning(); // ✅ Stop timer if lost
                     TriggerGameOver();
                     yield break;
                 }
@@ -145,11 +156,12 @@ public class waveSpawner : MonoBehaviour
                 yield return new WaitForSeconds(timeBetweenEnemies);
             }
 
+            // Countdown before next wave (except last)
             if (w < waves.Length - 1 && countdownText != null)
                 yield return StartCoroutine(CountdownRoutine(nextWaveCountdown));
         }
 
-        // ✅ Wait until all enemies are gone
+        // ✅ Wait until all enemies are gone before victory
         while (FindObjectsOfType<enemyPathing>().Length > 0)
             yield return null;
 
@@ -160,7 +172,14 @@ public class waveSpawner : MonoBehaviour
             gameSessionManager.Instance.wavesReached = currentWaveIndex;
         }
 
+        StopTimerIfRunning(); // ✅ Stop timer at victory
         TriggerGameOver();
+    }
+
+    private void StopTimerIfRunning()
+    {
+        if (timer.Instance != null)
+            timer.Instance.StopTimer();
     }
 
     private void TriggerGameOver()
@@ -297,7 +316,7 @@ public class waveSpawner : MonoBehaviour
         waveText.color = new Color(originalColor.r, originalColor.g, originalColor.b, 1f);
     }
 
-    // ✅ Add this so gameManager can read current wave
+    // ✅ For external access
     public int GetCurrentWave()
     {
         return currentWaveIndex;
