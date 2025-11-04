@@ -5,8 +5,14 @@ Klas: SD2B
 
 Datum:
 
+<<<<<<< Updated upstream
 1. Titel en elevator pitch
 Titel: Carr
+=======
+# 1. Titel en elevator pitch
+## Titel
+# Carr
+>>>>>>> Stashed changes
 
 Elevator pitch, maximaal twee zinnen: Je bent ANWB en veroorzaakt 'perongelukke' auto-ongelukken om genoeg geld te verdienen.
 
