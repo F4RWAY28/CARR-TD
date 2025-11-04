@@ -15,14 +15,30 @@ public class towerPlacement : MonoBehaviour
     [Tooltip("Scale of the transparent preview (X, Y, Z)")]
     public Vector3 previewScale = Vector3.one;
 
+    [Header("Collision & Detection Settings")]
+    public float pathDetectionRadius = 1.5f;
+
+    [Header("Sound Settings")]
+    public AudioClip placeSound;
+    [Range(0f, 1f)] public float placeVolume = 1f;
+    public AudioSource audioSource; // optional; created automatically if left empty
+
     private GameObject previewInstance;
     private LineRenderer rangeRenderer;
     private bool isPlacing = false;
     private bool canPlace = false;
     private Renderer[] previewRenderers;
+    private Collider[] overlapResults = new Collider[20];
 
-    private Collider[] overlapResults = new Collider[10];
-    public float checkRadius = 0.5f;
+    void Start()
+    {
+        // If no AudioSource is assigned, create one automatically
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+            audioSource.playOnAwake = false;
+        }
+    }
 
     void Update()
     {
@@ -43,14 +59,10 @@ public class towerPlacement : MonoBehaviour
         isPlacing = true;
 
         previewInstance = Instantiate(previewPrefab);
-
-        // Set the preview scale using the Vector3
         previewInstance.transform.localScale = previewScale;
 
         previewRenderers = previewInstance.GetComponentsInChildren<Renderer>();
-
         SetPreviewTransparency(0.5f);
-        AddOutline(previewInstance, Color.white, 0.05f);
 
         // Setup range visualization
         rangeRenderer = previewInstance.GetComponent<LineRenderer>();
@@ -76,21 +88,42 @@ public class towerPlacement : MonoBehaviour
         previewInstance.transform.position = hit.point + Vector3.up * heightOffset;
         canPlace = false;
 
-        // Check placement validity
-        int hits = Physics.OverlapSphereNonAlloc(previewInstance.transform.position, checkRadius, overlapResults);
-        bool collidingWithPath = false;
         bool onGround = hit.collider.CompareTag("Ground");
+        bool collidingWithPath = false;
+        bool collidingWithTower = false;
 
+        // Check for nearby paths
+        int hits = Physics.OverlapSphereNonAlloc(previewInstance.transform.position, pathDetectionRadius, overlapResults);
         for (int i = 0; i < hits; i++)
         {
-            if (overlapResults[i].CompareTag("Enemy path"))
+            if (overlapResults[i].CompareTag("Enemy path") || overlapResults[i].CompareTag("Destructible"))
             {
                 collidingWithPath = true;
                 break;
             }
         }
 
-        if (onGround && !collidingWithPath)
+        // Check for other towers
+        Collider previewCollider = previewInstance.GetComponent<Collider>();
+        if (previewCollider != null)
+        {
+            Collider[] hitsTower = Physics.OverlapBox(
+                previewCollider.bounds.center,
+                previewCollider.bounds.extents,
+                previewInstance.transform.rotation
+            );
+
+            foreach (Collider col in hitsTower)
+            {
+                if (col.CompareTag("Tower"))
+                {
+                    collidingWithTower = true;
+                    break;
+                }
+            }
+        }
+
+        if (onGround && !collidingWithPath && !collidingWithTower)
         {
             canPlace = true;
             SetPreviewColor(Color.green);
@@ -147,7 +180,16 @@ public class towerPlacement : MonoBehaviour
         if (gameManager.Instance.money < towerCost || !canPlace) return;
 
         GameObject tower = Instantiate(towerPrefab, previewInstance.transform.position, Quaternion.identity);
-        gameManager.Instance.LoseMoney(towerCost);
+        tower.tag = "Tower";
+
+        // 🧩 Prevent upgrade menu from opening right after placement
+        tower.GetComponent<towerInteractable>()?.SetPlaced();
+
+        gameManager.Instance.TrySpendMoney(towerCost);
+
+        // 🔊 Play placement sound
+        if (placeSound != null && audioSource != null)
+            audioSource.PlayOneShot(placeSound, placeVolume);
 
         StartCoroutine(FlashPlacedTower(tower));
         EndPlacement();
@@ -182,22 +224,6 @@ public class towerPlacement : MonoBehaviour
         isPlacing = false;
         canPlace = false;
         rangeRenderer = null;
-    }
-
-    private void AddOutline(GameObject obj, Color outlineColor, float thickness)
-    {
-        foreach (Renderer rend in obj.GetComponentsInChildren<Renderer>())
-        {
-            GameObject outlineObj = Instantiate(rend.gameObject, rend.transform.position, rend.transform.rotation, rend.transform);
-            outlineObj.transform.localScale *= (1f + thickness);
-            Renderer outlineRend = outlineObj.GetComponent<Renderer>();
-
-            Material outlineMat = new Material(rend.sharedMaterial);
-            outlineMat.color = outlineColor;
-            outlineRend.material = outlineMat;
-
-            outlineRend.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-        }
     }
 
     private void DrawRangeCircle(Vector3 center, float radius)

@@ -11,6 +11,9 @@ TagManager:
   - Van2
   - Van3
   - Ground
+  - Tower
+  - Destructible
+  - Water
   layers:
   - Default
   - TransparentFX

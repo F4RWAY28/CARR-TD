@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 377871333786087084}
   - component: {fileID: 679474546405202194}
   - component: {fileID: 725634622324317496}
+  - component: {fileID: 7407549645746988815}
   m_Layer: 0
   m_Name: Wheel_D001
   m_TagString: Untagged
@@ -86,6 +87,28 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &7407549645746988815
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1668691248793136140}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 8983968481897816753, guid: 74e4023ca8196a942a51f4ef03454806, type: 3}
 --- !u!1 &2065751565810391815
 GameObject:
   m_ObjectHideFlags: 0
@@ -97,6 +120,7 @@ GameObject:
   - component: {fileID: 2882713453393150329}
   - component: {fileID: 1648975942408944346}
   - component: {fileID: 3023334390307057682}
+  - component: {fileID: 168070562227925871}
   m_Layer: 0
   m_Name: Wheel_D
   m_TagString: Untagged
@@ -172,6 +196,28 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &168070562227925871
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2065751565810391815}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -6601756279629895220, guid: 74e4023ca8196a942a51f4ef03454806, type: 3}
 --- !u!1 &2130995807727088461
 GameObject:
   m_ObjectHideFlags: 0
@@ -330,6 +376,7 @@ GameObject:
   - component: {fileID: 374701714093624570}
   - component: {fileID: 2776385369694692031}
   - component: {fileID: 3798804413936777741}
+  - component: {fileID: 4680408034358834677}
   m_Layer: 0
   m_Name: Wheel_D002
   m_TagString: Untagged
@@ -405,6 +452,28 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &4680408034358834677
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5333709800878496469}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 1889208972694809180, guid: 74e4023ca8196a942a51f4ef03454806, type: 3}
 --- !u!1 &6080362841600258659
 GameObject:
   m_ObjectHideFlags: 0
@@ -416,6 +485,7 @@ GameObject:
   - component: {fileID: 8889745083364791865}
   - component: {fileID: 8632967129706562349}
   - component: {fileID: 9068212845281396757}
+  - component: {fileID: 3612900063932574115}
   m_Layer: 0
   m_Name: Wheel_D003
   m_TagString: Untagged
@@ -491,6 +561,28 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &3612900063932574115
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6080362841600258659}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4544323281081092332, guid: 74e4023ca8196a942a51f4ef03454806, type: 3}
 --- !u!1 &7460733030864014674
 GameObject:
   m_ObjectHideFlags: 0

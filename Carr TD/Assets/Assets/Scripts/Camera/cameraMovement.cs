@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class cameraMovement : MonoBehaviour
 {
@@ -20,12 +22,17 @@ public class cameraMovement : MonoBehaviour
     private float rotationY = 0f;
     private bool isLooking = false;
 
+    private GraphicRaycaster[] raycasters; // All UI raycasters in the scene
+
     void Start()
     {
         // Initialize rotation from current transform
         Vector3 euler = transform.rotation.eulerAngles;
         rotationX = euler.y;
         rotationY = euler.x;
+
+        // Cache all UI raycasters (e.g. Canvas)
+        raycasters = FindObjectsOfType<GraphicRaycaster>();
     }
 
     void Update()
@@ -42,12 +49,18 @@ public class cameraMovement : MonoBehaviour
             isLooking = true;
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
+
+            // Disable UI raycasts so mouse ignores buttons
+            SetUIRaycastState(false);
         }
         else if (Input.GetMouseButtonUp(1)) // Right mouse released
         {
             isLooking = false;
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
+
+            // Re-enable UI raycasts
+            SetUIRaycastState(true);
         }
 
         if (isLooking)
@@ -89,5 +102,15 @@ public class cameraMovement : MonoBehaviour
         pos.y = Mathf.Clamp(pos.y, minY, maxY);
         pos.z = Mathf.Clamp(pos.z, minZ, maxZ);
         transform.position = pos;
+    }
+
+    void SetUIRaycastState(bool enabled)
+    {
+        if (raycasters == null) return;
+        foreach (var r in raycasters)
+        {
+            if (r != null)
+                r.enabled = enabled;
+        }
     }
 }

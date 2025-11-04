@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(AudioSource))]
@@ -83,9 +83,12 @@ public class vanProjectile : MonoBehaviour
             {
                 GameObject explosion = Instantiate(explosionPrefab, transform.position, Quaternion.identity);
                 explosion.transform.localScale = Vector3.one * explosionScale;
+
+                // 💥 Destroy explosion clone after 2 seconds
+                Destroy(explosion, 2f);
             }
 
-            // Play a random explosion sound from prefab itself
+            // Play a random explosion sound
             if (explosionSounds != null && explosionSounds.Length > 0 && audioSource != null)
             {
                 int index = Random.Range(0, explosionSounds.Length);
@@ -97,13 +100,13 @@ public class vanProjectile : MonoBehaviour
                 StartCoroutine(shakeScript.Shaking());
         }
 
-        // Deal damage to enemy (unchanged)
+        // Deal damage to enemy
         enemyPathing collidedEnemy = other.GetComponent<enemyPathing>();
         if (collidedEnemy != null)
         {
-            collidedEnemy.TakeDamage(damage); // Only pass damage
+            collidedEnemy.TakeDamage(damage);
         }
 
-        // The van is NOT destroyed on impact
+        // The van projectile is NOT destroyed on impact — it will self-destruct after its lifetime expires
     }
 }

@@ -10,6 +10,8 @@ public class tower : MonoBehaviour
     public float vanForce = 20f;
     public Transform turretHead;
     [SerializeField] public float range = 15f;
+    [SerializeField] private float rotationSpeed = 8f; // how quickly it turns toward target
+    [SerializeField] private float aimThreshold = 5f; // how close (in degrees) the turret must be to the target before firing
 
     private float fireCountdown = 0f;
     private GameObject currentTarget;
@@ -18,20 +20,19 @@ public class tower : MonoBehaviour
     {
         fireCountdown -= Time.deltaTime;
 
-        // Get a valid target
         GameObject target = GetFirstAliveEnemy();
 
         if (target != null)
         {
             float distance = Vector3.Distance(transform.position, target.transform.position);
 
-            // Only aim and shoot if within range
             if (distance <= range)
             {
                 currentTarget = target;
-                AimAt(target);
+                bool isAimed = AimAt(target);
 
-                if (fireCountdown <= 0f)
+                // Only shoot when the turret is mostly facing the target
+                if (isAimed && fireCountdown <= 0f)
                 {
                     Shoot(target);
                     fireCountdown = fireRate;
@@ -39,7 +40,7 @@ public class tower : MonoBehaviour
             }
             else
             {
-                currentTarget = null; // too far, stop tracking
+                currentTarget = null;
             }
         }
         else
@@ -56,48 +57,47 @@ public class tower : MonoBehaviour
 
         foreach (GameObject e in enemies)
         {
-            if (e == null) continue;
-            if (!e.activeInHierarchy) continue;
+            if (e == null || !e.activeInHierarchy) continue;
 
             enemyPathing path = e.GetComponent<enemyPathing>();
-            if (path == null || path.waypoints == null || path.waypoints.Length == 0)
-                continue;
+            if (path == null || path.waypoints == null || path.waypoints.Length == 0) continue;
+            if (Vector3.Distance(transform.position, e.transform.position) > range) continue;
+            if (path.lives <= 0) continue;
 
-            // Skip if out of range
-            if (Vector3.Distance(transform.position, e.transform.position) > range)
-                continue;
-
-            // Skip if dead (lives <= 0)
-            if (path.lives <= 0)
-                continue;
-
-            if (path.waypointIndex > maxWaypointIndex)
+            if (path.WaypointIndex > maxWaypointIndex)
             {
                 first = e;
-                maxWaypointIndex = path.waypointIndex;
+                maxWaypointIndex = path.WaypointIndex;
             }
         }
 
         return first;
     }
 
-    void AimAt(GameObject target)
+    /// <summary>
+    /// Rotates the turret toward the target and returns true if it's mostly facing it.
+    /// </summary>
+    bool AimAt(GameObject target)
     {
-        if (turretHead == null || target == null) return;
+        if (turretHead == null || target == null) return false;
 
         Vector3 dir = target.transform.position - turretHead.position;
-        dir.y = 0;
-        if (dir != Vector3.zero)
-            turretHead.rotation = Quaternion.LookRotation(dir);
+        dir.y = 0; // keep rotation horizontal
+
+        if (dir.sqrMagnitude < 0.01f) return false;
+
+        Quaternion targetRot = Quaternion.LookRotation(dir);
+        turretHead.rotation = Quaternion.Lerp(turretHead.rotation, targetRot, Time.deltaTime * rotationSpeed);
+
+        // Check if the turret is roughly facing the target
+        float angle = Quaternion.Angle(turretHead.rotation, targetRot);
+        return angle < aimThreshold;
     }
 
     void Shoot(GameObject target)
     {
         if (vanPrefab == null || firePoint == null || target == null) return;
-
-        // Double-check target is still within range before firing
-        if (Vector3.Distance(transform.position, target.transform.position) > range)
-            return;
+        if (Vector3.Distance(transform.position, target.transform.position) > range) return;
 
         GameObject vanGO = Instantiate(vanPrefab, firePoint.position, firePoint.rotation);
         vanProjectile van = vanGO.GetComponent<vanProjectile>();
