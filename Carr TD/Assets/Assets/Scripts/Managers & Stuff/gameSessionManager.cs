@@ -1,10 +1,11 @@
 using UnityEngine;
 
-public class gameSessionData : MonoBehaviour
+public class gameSessionManager : MonoBehaviour
 {
-    public static gameSessionData Instance;
+    public static gameSessionManager Instance;
 
     [HideInInspector] public int wavesReached = 0;
+    [HideInInspector] public bool playerWon = false;
 
     private void Awake()
     {
@@ -13,6 +14,9 @@ public class gameSessionData : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(gameObject);
         }
-        else Destroy(gameObject);
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 }

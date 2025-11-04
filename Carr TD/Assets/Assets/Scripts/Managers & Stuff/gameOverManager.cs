@@ -10,34 +10,48 @@ public class gameOverManager : MonoBehaviour
     public TMP_Text wavesReachedText;
 
     [Header("Settings")]
-    public float fadeDuration = 1f;      // Time for text to fade in/out
-    public float visibleDuration = 2f;   // How long text stays fully visible
-    public string nextSceneName;         // Scene to load after fade out
+    public float fadeDuration = 1f;
+    public float visibleDuration = 2f;
+    public string nextSceneName;
 
     private void Start()
     {
-        // Start invisible
         if (gameOverText != null) gameOverText.alpha = 0f;
         if (wavesReachedText != null) wavesReachedText.alpha = 0f;
 
-        // Start the sequence
+        ShowResults();
+    }
+
+    private void ShowResults()
+    {
+        bool playerWon = gameSessionManager.Instance != null && gameSessionManager.Instance.playerWon;
+        int wavesReached = gameSessionManager.Instance != null ? gameSessionManager.Instance.wavesReached : 0;
+
+        if (gameOverText != null)
+        {
+            gameOverText.text = playerWon ? "You Win!" : "Game Over";
+            gameOverText.color = playerWon ? Color.green : Color.red;
+        }
+
+        if (wavesReachedText != null)
+        {
+            wavesReachedText.text = "Waves Reached: " + wavesReached;
+            wavesReachedText.color = playerWon ? Color.green : Color.red;
+        }
+
         StartCoroutine(GameOverSequence());
     }
 
     private IEnumerator GameOverSequence()
     {
-        // Fade in texts
         yield return StartCoroutine(FadeText(gameOverText, 0f, 1f, fadeDuration));
         yield return StartCoroutine(FadeText(wavesReachedText, 0f, 1f, fadeDuration));
 
-        // Wait while fully visible
         yield return new WaitForSecondsRealtime(visibleDuration);
 
-        // Fade out texts
         yield return StartCoroutine(FadeText(gameOverText, 1f, 0f, fadeDuration));
         yield return StartCoroutine(FadeText(wavesReachedText, 1f, 0f, fadeDuration));
 
-        // Load next scene
         if (!string.IsNullOrEmpty(nextSceneName))
             SceneManager.LoadScene(nextSceneName);
     }

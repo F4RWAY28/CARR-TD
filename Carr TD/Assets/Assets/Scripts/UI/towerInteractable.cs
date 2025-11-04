@@ -29,6 +29,9 @@ public class towerInteractable : MonoBehaviour
     // Range change event for selection manager
     public System.Action OnRangeChanged;
 
+    // 🧩 Prevents immediate interaction after placement
+    private bool justPlaced = false;
+
     private void Start()
     {
         towerScript = GetComponent<tower>();
@@ -59,8 +62,24 @@ public class towerInteractable : MonoBehaviour
 
     private void OnMouseDown()
     {
+        // 🧩 Ignore click if tower was just placed
+        if (justPlaced) return;
+
         if (towerSelectionManager.Instance != null)
             towerSelectionManager.Instance.SelectTowerClick(this);
+    }
+
+    // 🧩 Called right after tower is spawned to block clicks briefly
+    public void SetPlaced()
+    {
+        justPlaced = true;
+        StartCoroutine(ResetPlacement());
+    }
+
+    private System.Collections.IEnumerator ResetPlacement()
+    {
+        yield return new WaitForSeconds(0.2f); // Ignore clicks for a short time
+        justPlaced = false;
     }
 
     public void ApplyUpgrade(int index)
@@ -129,7 +148,6 @@ public class towerInteractable : MonoBehaviour
 
     public StatUpgradeOption[] GetUpgrades() => upgrades;
     public int GetSellPrice() => baseSellPrice;
-
     public float GetRange() => towerScript != null ? towerScript.range : 0f;
 }
 

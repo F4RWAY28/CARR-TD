@@ -12,18 +12,10 @@ public class cameraShake : MonoBehaviour
     public bool start = false;
 
     private bool isShaking = false;
-    private Vector3 shakeOffset = Vector3.zero;
-    private Vector3 basePosition;
 
     private void Update()
     {
-        // Store the base position *before* applying shake
-        basePosition = transform.position;
-
-        // Apply current shake offset
-        transform.position = basePosition + shakeOffset;
-
-        // Start shake if triggered
+        // Manual trigger from Inspector
         if (start)
         {
             start = false;
@@ -33,23 +25,31 @@ public class cameraShake : MonoBehaviour
 
     public IEnumerator Shaking()
     {
-        if (isShaking) yield break;
-        isShaking = true;
+        if (isShaking)
+            yield break;
 
+        isShaking = true;
         float elapsedTime = 0f;
+
+        // Capture the current position as the "base" right before shaking
+        Vector3 baseLocalPosition = transform.localPosition;
 
         while (elapsedTime < shakeDuration)
         {
             elapsedTime += Time.deltaTime;
 
             float strength = animCurve.Evaluate(elapsedTime / shakeDuration) * shakeStrength;
-            shakeOffset = Random.insideUnitSphere * strength;
+            Vector3 shakeOffset = Random.insideUnitSphere * strength;
+
+            // Always shake relative to current base position
+            transform.localPosition = baseLocalPosition + shakeOffset;
 
             yield return null;
         }
 
-        // Reset shake
-        shakeOffset = Vector3.zero;
+        // Smoothly reset to wherever the camera was when shaking started
+        transform.localPosition = baseLocalPosition;
+
         isShaking = false;
     }
 }

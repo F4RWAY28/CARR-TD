@@ -181,6 +181,10 @@ public class towerPlacement : MonoBehaviour
 
         GameObject tower = Instantiate(towerPrefab, previewInstance.transform.position, Quaternion.identity);
         tower.tag = "Tower";
+
+        // 🧩 Prevent upgrade menu from opening right after placement
+        tower.GetComponent<towerInteractable>()?.SetPlaced();
+
         gameManager.Instance.TrySpendMoney(towerCost);
 
         // 🔊 Play placement sound

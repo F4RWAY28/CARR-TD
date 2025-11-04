@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using TMPro;
 using UnityEngine;
 
@@ -26,7 +25,7 @@ public class waveSpawner : MonoBehaviour
     [Header("Sounds")]
     public AudioClip countdownTickSound;
     public AudioClip waveStartSound;
-    public AudioSource audioSource; // optional; can be assigned manually
+    public AudioSource audioSource;
 
     private Transform[] waypoints;
     private int currentWaveIndex = 0;
@@ -40,9 +39,7 @@ public class waveSpawner : MonoBehaviour
     private void Start()
     {
         if (audioSource == null)
-        {
             audioSource = gameObject.AddComponent<AudioSource>();
-        }
 
         if (pathParent != null)
         {
@@ -76,11 +73,20 @@ public class waveSpawner : MonoBehaviour
         for (int w = 0; w < waves.Length; w++)
         {
             if (gameManager.Instance != null && gameManager.Instance.GetMoney() <= 0)
+            {
+                if (gameSessionManager.Instance != null)
+                    gameSessionManager.Instance.playerWon = false;
+
+                TriggerGameOver();
                 yield break;
+            }
 
             currentWaveIndex = w + 1;
 
-            // 🔊 Play wave start sound
+            // Update session manager
+            if (gameSessionManager.Instance != null)
+                gameSessionManager.Instance.wavesReached = currentWaveIndex;
+
             if (waveStartSound != null && audioSource != null)
                 audioSource.PlayOneShot(waveStartSound);
 
@@ -98,6 +104,7 @@ public class waveSpawner : MonoBehaviour
             for (int i = 0; i < wave.enemiesInWave; i++)
                 randomizedEnemies.Add(wave.enemies[Random.Range(0, wave.enemies.Count)]);
 
+            // Shuffle
             for (int i = 0; i < randomizedEnemies.Count; i++)
             {
                 enemyData temp = randomizedEnemies[i];
@@ -109,7 +116,13 @@ public class waveSpawner : MonoBehaviour
             foreach (enemyData data in randomizedEnemies)
             {
                 if (gameManager.Instance != null && gameManager.Instance.GetMoney() <= 0)
+                {
+                    if (gameSessionManager.Instance != null)
+                        gameSessionManager.Instance.playerWon = false;
+
+                    TriggerGameOver();
                     yield break;
+                }
 
                 if (data == null || data.enemyPrefab == null)
                 {
@@ -127,9 +140,7 @@ public class waveSpawner : MonoBehaviour
                     pathing.waypoints = waypoints;
                 }
                 else
-                {
                     Debug.LogError("waveSpawner: prefab does not have enemyPathing attached: " + go.name);
-                }
 
                 yield return new WaitForSeconds(timeBetweenEnemies);
             }
@@ -138,23 +149,27 @@ public class waveSpawner : MonoBehaviour
                 yield return StartCoroutine(CountdownRoutine(nextWaveCountdown));
         }
 
-        if (waveText != null && FindObjectsOfType<enemyPathing>().All(e => e.lives <= 0))
-        {
-            waveText.gameObject.SetActive(true);
-            waveText.text = "You Win!";
-            waveText.color = new Color(waveText.color.r, waveText.color.g, waveText.color.b, 1f);
+        // ✅ Wait until all enemies are gone
+        while (FindObjectsOfType<enemyPathing>().Length > 0)
+            yield return null;
 
-            // Find the SceneFader in the scene
-            sceneFader fader = FindObjectOfType<sceneFader>();
-            if (fader != null)
-            {
-                fader.FadeToScene(); // Call the fade function
-            }
-            else
-            {
-                Debug.LogWarning("No sceneFader found in the scene!");
-            }
+        // ✅ Player won
+        if (gameSessionManager.Instance != null)
+        {
+            gameSessionManager.Instance.playerWon = true;
+            gameSessionManager.Instance.wavesReached = currentWaveIndex;
         }
+
+        TriggerGameOver();
+    }
+
+    private void TriggerGameOver()
+    {
+        sceneFader fader = FindObjectOfType<sceneFader>();
+        if (fader != null)
+            fader.FadeToScene();
+        else
+            Debug.LogWarning("No sceneFader found in the scene!");
 
         if (countdownText != null)
         {
@@ -193,7 +208,6 @@ public class waveSpawner : MonoBehaviour
             int seconds = Mathf.CeilToInt(remaining);
             countdownText.text = "Next Wave In: " + seconds;
 
-            // 🔊 Play tick sound once per second
             if (seconds < lastSecond)
             {
                 lastSecond = seconds;
@@ -215,11 +229,11 @@ public class waveSpawner : MonoBehaviour
 
         // Fade out
         float fadeOutDuration = 0.5f;
-        float elapsed = 0f;
-        while (elapsed < fadeOutDuration)
+        float elapsedOut = 0f;
+        while (elapsedOut < fadeOutDuration)
         {
-            elapsed += Time.deltaTime;
-            float a = Mathf.Lerp(1f, 0f, elapsed / fadeOutDuration);
+            elapsedOut += Time.deltaTime;
+            float a = Mathf.Lerp(1f, 0f, elapsedOut / fadeOutDuration);
             Color c = countdownText.color;
             c.a = a;
             countdownText.color = c;
@@ -283,6 +297,7 @@ public class waveSpawner : MonoBehaviour
         waveText.color = new Color(originalColor.r, originalColor.g, originalColor.b, 1f);
     }
 
+    // ✅ Add this so gameManager can read current wave
     public int GetCurrentWave()
     {
         return currentWaveIndex;
